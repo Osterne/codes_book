@@ -16,6 +16,7 @@ caranguejo <- read_table2("https://goo.gl/Wvvnrf", col_names = FALSE)
 # some changes
 colnames(caranguejo)=c("Obs","C","S","W","Wt","Sa")
 attach(caranguejo)
+head(caranguejo)
 
 
 # descriptive analysis

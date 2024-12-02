@@ -1,0 +1,67 @@
+# Importando as bibliotecas necessárias
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.datasets import load_iris
+from sklearn.cluster import AgglomerativeClustering
+from scipy.cluster.hierarchy import dendrogram, linkage
+from sklearn.metrics import confusion_matrix
+import seaborn as sns
+
+# Carregando o conjunto de dados Iris
+iris = load_iris()
+X = iris.data  # Atributos (features)
+y = iris.target  # Rótulos reais das flores (para comparação)
+
+# Aplicando a Clusterização Hierárquica Aglomerativa com 3 clusters (para 3 classes de flores)
+agg_clust = AgglomerativeClustering(n_clusters=3, linkage='ward')
+y_pred = agg_clust.fit_predict(X)
+
+# Visualizando o Dendrograma (agrupamento hierárquico)
+linked = linkage(X, method='ward')  # 'ward' é o método que minimiza a variância dentro dos clusters
+
+plt.figure(figsize=(10, 7))
+dendrogram(linked, labels=iris.target_names[y], orientation='top', distance_sort='descending')
+plt.title('Dendrograma de Clusterização Hierárquica Aglomerativa')
+plt.xlabel('Índices dos pontos')
+plt.ylabel('Distância')
+plt.show()
+
+# Avaliando os resultados com a matriz de confusão
+cm = confusion_matrix(y, y_pred)
+print('\nMatriz de Confusão:')
+print(cm)
+
+# Visualizando a matriz de confusão com o seaborn
+plt.figure(figsize=(6,6))
+sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', xticklabels=iris.target_names, yticklabels=iris.target_names)
+plt.title('Matriz de Confusão: Clusterização Hierárquica vs Rótulos Reais')
+plt.xlabel('Clusters Preditos')
+plt.ylabel('Rótulos Reais')
+plt.show()
+
+# Comparando os clusters preditos com os rótulos reais (usando as classes do Iris)
+# Como o algoritmo não sabe os rótulos reais, faremos o mapeamento dos clusters para as classes reais
+# Utilizando a mesma técnica de mapeamento que usamos no K-Means
+
+from scipy.stats import mode
+
+# Encontrando o rótulo de cada cluster (usando o modo da classe real dos pontos atribuídos a cada cluster)
+cluster_labels = np.zeros_like(y_pred)
+
+for i in range(3):
+    mask = (y_pred == i)
+    cluster_labels[mask] = mode(y[mask])[0]
+
+# Exibindo a matriz de confusão após o mapeamento
+cm_mapped = confusion_matrix(y, cluster_labels)
+print('\nMatriz de Confusão Após Mapeamento:')
+print(cm_mapped)
+
+# Visualizando a matriz de confusão mapeada
+plt.figure(figsize=(6,6))
+sns.heatmap(cm_mapped, annot=True, fmt='d', cmap='Blues', xticklabels=iris.target_names, yticklabels=iris.target_names)
+plt.title('Matriz de Confusão: Clusterização Hierárquica Mapeada para Classes Reais')
+plt.xlabel('Classes Reais')
+plt.ylabel('Clusters Preditos')
+plt.show()

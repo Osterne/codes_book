@@ -2,8 +2,14 @@
 # Lecture: Discriminant Analysis
 # Author: Vinicius Osterne (www.osterne.com)
 
-
 #https://rpubs.com/rdelgado/399475
+
+
+
+
+
+
+
 
 
 # ---------------------------------------------------------------------------
@@ -63,7 +69,7 @@ fviz_dist(distance, gradient = list(low = "#00AFBB", mid = "white", high = "#FC4
 # K-means
 k2 <- kmeans(df, centers = 2, nstart = 25)
 str(k2)
-k2
+k2http://127.0.0.1:32467/graphics/a281ff7d-ba34-448a-a835-a243874cdf10.png
 
 
 

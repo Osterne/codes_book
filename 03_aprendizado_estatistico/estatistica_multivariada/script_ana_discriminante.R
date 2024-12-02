@@ -6,10 +6,61 @@
 #https://rpubs.com/Joaquin_AR/233932
 
 
+
+
+#Gráfico de dispersão
+x1 = 1:100
+x2 = x1 + rnorm(100, mean = 0, sd = 15)
+plot(x1, x2, pch = 19, col = "black", lwd = 1, 
+     xlab = "Idade (em ano)", ylab = "Tempo de espera (em anos)")
+
+
+
+#Histograma
+x1 = rnorm(100, mean = 0, sd = 15)
+x2 = rchisq(100, 5)
+par(mfrow = c(1,2))
+hist(x1, prob = T, main = "(A)")
+hist(x2, prob = T, main = "(B)")
+
+
+
+# Gráfico de dispersão com múltiplas informações
+
+library(GGally)
+library(ggplot2)
+ggpairs(iris[,-5])+ theme_bw()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # ---------------------------------------------------------------------------
 # Application 1
 # ---------------------------------------------------------------------------
-
 
 input <- ("
 especie pata abdomen organo_sexual 

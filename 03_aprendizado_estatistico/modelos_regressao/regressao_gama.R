@@ -14,10 +14,14 @@ x<-runif(n,0,1)
 eta<-2 + 3*x 
 mu<-exp(eta)
 var<- 2
+
 alpha <- mu^2/var
 sigma <- var/mu
+
 y1 <- rgamma(n, shape = alpha, scale = sigma) 
 df1<-data.frame(y1,x)
+
+hist(y1)
 
 
 # ajuste do modelo

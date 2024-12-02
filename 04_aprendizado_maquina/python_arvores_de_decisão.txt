@@ -1,0 +1,60 @@
+# Importando as bibliotecas necessárias
+import pandas as pd
+import numpy as np
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier, plot_tree
+from sklearn.metrics import confusion_matrix, accuracy_score
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Carregando o conjunto de dados Iris
+iris = load_iris()
+X = iris.data  # Atributos (features)
+y = iris.target  # Rótulos (target)
+
+# Dividindo os dados em conjunto de treino e teste
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+
+# Criando o classificador de árvore de decisão
+clf = DecisionTreeClassifier(random_state=42)
+
+# Treinando o modelo com os dados de treino
+clf.fit(X_train, y_train)
+
+# Fazendo previsões com o conjunto de teste
+y_pred = clf.predict(X_test)
+
+# Avaliando a acurácia do modelo
+accuracy = accuracy_score(y_test, y_pred)
+print(f'Acurácia do modelo: {accuracy:.4f}')
+
+# Exibindo a matriz de confusão
+cm = confusion_matrix(y_test, y_pred)
+print('Matriz de Confusão:')
+print(cm)
+
+# Visualizando a matriz de confusão com o seaborn
+plt.figure(figsize=(6,6))
+sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', xticklabels=iris.target_names, yticklabels=iris.target_names)
+plt.title('Matriz de Confusão')
+plt.xlabel('Previsões')
+plt.ylabel('Valores Reais')
+plt.show()
+
+# Visualizando a árvore de decisão
+plt.figure(figsize=(12,8))
+plot_tree(clf, filled=True, feature_names=iris.feature_names, class_names=iris.target_names, rounded=True, fontsize=10)
+plt.title('Árvore de Decisão Treinada')
+plt.show()
+
+# Exibindo a importância das features
+print('\nImportância das Features:')
+for feature, importance in zip(iris.feature_names, clf.feature_importances_):
+    print(f'{feature}: {importance:.4f}')
+
+
+
+
+
+

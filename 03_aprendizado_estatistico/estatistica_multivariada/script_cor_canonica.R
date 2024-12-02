@@ -67,6 +67,11 @@ cc2[3:6]
 
 #https://medium.com/@josef.waples/canonical-correlation-analysis-cca-in-r-rstudio-using-mtcars-1669b1c56731
 
+
+
+
+
+
 library(tidyverse)
 data(mtcars)
 head(mtcars)

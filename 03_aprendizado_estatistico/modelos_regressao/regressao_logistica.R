@@ -1,6 +1,6 @@
 #============================================================================================
-# Script - Reg logística
-# By Vinícius Osterne (www.osterne.com | vinicius@osterne.com)
+# Script - Regressão Logística
+# Vinícius Osterne (www.osterne.com | vinicius@osterne.com)
 #============================================================================================
 
 
@@ -28,94 +28,88 @@
 #é considerada a seguinte estrutura:
 #  $\mathcal{P}(y_i = 1) = p_i = e^{\beta_0 + \beta_1x_{1i} + ... + \beta_kx_{ki}}$
 #  dividido por $1 + e^{\mathcal{P}(y_i = 1) = p_i = \beta_0 + \beta_1x_{1i} + ... + \beta_kx_{ki}}$
-#  
-#  
-#  
-#  
-#  
+
   
 #============================================================================================
-# Reg logística - Simples
+# Aplicação 1 - Regressão Logística Simples
 #============================================================================================
 
-
+# Dados
 temp = c(53,56,57,63,66,67,67,67,68,69,70,70,70,70,72,73,75,75,76,76,78,79,80,81)
 falha = c(1,1,1,0,0,0,0,0,0,0,0,1,1,1,0,0,0,1,0,0,0,0,0,0)
 
 
+
+# Plot dos dados
 plot(temp, falha, 
      pch = 20, 
      main = "", xlab="Temperatura (em °F)", ylab = "Falha")
 
 
+
+# Ajustando o modelo
 model_1 = glm(falha~temp,family=binomial(link="logit"))
 summary(model_1)
 
 
 
-  
+# Log da razão de chances
+exp(coef(model_1)[1]) 
+exp(coef(model_1)[2]) #para cada unidade de aumento na temperatura, a chance da falha se reduz em 0.84
+
+
+# Plot com a linha de ajuste
 plot(temp, falha, 
      pch = 20, 
      main = "", xlab="Temperatura (em °F)", ylab = "Falha")
 lines(spline(temp, model_1$fitted), col="red", lwd=3)
 
 
-exp(coef(model_1)[2])
 
+# Tabela de probabilidades
 prob_table = cbind(temp, falha, model_1$fitted.values)
 head(prob_table)
 
+
+
+# Verificação de ajuste (envolope simulado)
 library(hnp)
 hnp(model_1,
     pch = 20, 
     main = "", xlab="Quantis teóricos", ylab = "Resíduos")
 
 
+
+# Verificação de ajuste (matriz de transição)
 prediction = predict(model_1, type = "response")
 table(falha, prediction > 0.5)
   
-  
+
+
+
+
+
+
+
+
+
+
 #============================================================================================
-# Reg logística
+# Aplicação 2 - Regressão Logística Múltiplo
 #============================================================================================
 
-#http://lea.estatistica.ccet.ufrn.br/tutoriais/regressao-logistica.html
 
-
-
-# Previsão: 400
-# Demanda do mês anterior: 430
-# alpha = 0.142
-
-# Previsão para o mês 8:
-0.142*430 + (1-0.142)*400 = 404.26
-
-
-
-
-
-
-# Nota:
-# se eu tiver interessado em avaliar a importância de determinadas variaveis
-# e/ou interpretações associadas a essas variáveis, não precisamos dividir
-# MAs se estamos interessados somente em previsões, aí dividimos 
-# para saber como o modelo se comporta em dados não vistos.
-
-
-# Carregando os dados
-set.seed(639245)
+# Dados
 library(aplore3)
 data(lowbwt)
-
-# Visualizando os dados
 df_client = lowbwt
 head(df_client)
 
 # Detalhes dos atributos
-# low:	Indicador de peso baixo ao nascer (1: > = 2500g, 2: < 2500g).
-# age:	Idade da mãe em anos.
+# low:	Indicador de peso baixo ao nascer (1: > = 2500g, 2: < 2500g)
+# age:	Idade da mãe em anos
 # lwt:	Peso da mãe no último período menstrual em libras.
-# smoke:	Indicador de fumo durante a gravidez (1: Não, 2: Sim).
+# smoke:	Indicador de fumo durante a gravidez (1: Não, 2: Sim)
 
 # Filtrando e renomeando os atributos de interesse
 attr = c("low","age", "lwt", "smoke")
@@ -176,7 +170,7 @@ levels(df_client$fumante_mae) = c(0, 1)
 model_1 = glm(peso_bebe ~ idade_mae, family = binomial, data = df_client)
 summary(model_1)
 
-# Não é significativa, vale usar teste de Wald para 
+# Não é significativa, vale usar teste de Wald para avaliar
 
 
 
@@ -195,10 +189,11 @@ summary(model_3)
 model_4 = glm(peso_bebe ~ peso_mae + fumante_mae, family = binomial, data = df_client)
 summary(model_4)
 
-# A partir dessa saída, pode-se concluir que as probabilidades ajustadas de ter um filho 
-# com menor peso terão intercepto nulo (p=0.4345 ), serão decrescentes conforme o peso da 
-# mãe aumenta (p=0.0287 ) e aumentam se a mãe é fumante (p=0.0372 ). A seguir, será utilizada a 
-# tabela ANOVA com testes da máxima verossimilhança para verificar a significância do modelo completo.
+# A partir dessa saída, pode-se concluir que as probabilidades ajustadas de ter um filho com menor peso terão:
+# intercepto nulo (p=0.4345)
+# serão decrescentes conforme o peso da mãe aumenta (p=0.0287)
+# aumentam se a mãe é fumante (p=0.0372)
+# A seguir, será utilizada a tabela ANOVA com testes da máxima verossimilhança para verificar a significância do modelo completo.
 
 anova(model_4, test = "Chisq")
 
@@ -220,7 +215,7 @@ plot(indices, res_model_4_pearson,
 
 # Teste de ajuste
 # O p-valor da estatística qui-quadrado de Pearson para o ajuste do modelo pode ser calculada pelo comando
-pchisq(sum(res_model_4_pearson^2), df = model_4$df.residual, lower.tail = F)
+#pchisq(sum(res_model_4_pearson^2), df = model_4$df.residual, lower.tail = F)
 
 
 
@@ -239,23 +234,13 @@ pchisq(sum(res_model_4_deviance^2), df = model_4$df.residual, lower.tail = F)
 
 
 
-
-
 # Predição
 # critério de separação é de 0.3
-prediction = predict(model_4, type = "response")
-table(df_client$peso_bebe, prediction > 0.3)
-
-
-
-# Métricas para o limiar:
 pred = predict(model_4, type = "response")
 cm = table(df_client$peso_bebe, pred > 0.3)
 cm
-
 sens = round(cm[2,2]/(cm[2,1] + cm[2,2]), 2)
 sens
-
 
 
 # Curva ROC
@@ -280,20 +265,10 @@ exp(coef(model_4))
 
 
 #Precisão: https://smolski.github.io/livroavancado/reglog.html
-
-
-
-# O teste Hosmer e Lemeshow
-
-
-# --------------------------------------------
-# Modelo de regressão com resposta múltipla
-# --------------------------------------------
-
 #https://stats.oarc.ucla.edu/r/dae/multinomial-logistic-regression/
 #https://bookdown.org/chua/ber642_advanced_regression/multinomial-logistic-regression.html
 #https://rstudio-pubs-static.s3.amazonaws.com/533804_c2fc5294e6eb407facf66d81a4cadafa.html
-
+#http://lea.estatistica.ccet.ufrn.br/tutoriais/regressao-logistica.html
 
 library(VGAM)
 

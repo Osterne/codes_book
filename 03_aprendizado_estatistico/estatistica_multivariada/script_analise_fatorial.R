@@ -12,7 +12,7 @@
 
 
 # necessary packages
-library(psych) 
+library(psych)
 library(corrplot)
 library(nFactors)
 
@@ -160,7 +160,7 @@ factanal(~v1+v2+v3+v4+v5+v6, factors = 3,
 
 
 #Atributos:
-  
+
 #Satisfaz
 #Natural
 #Fibra
@@ -188,9 +188,11 @@ factanal(~v1+v2+v3+v4+v5+v6, factors = 3,
 #Nutritivo
 
 # data
-data = read_csv("rte_cereal.csv")
-data = data.frame(data) 
-  
+#data = read_csv("rte_cereal.csv")
+data <- read.csv("D:/OneDrive/Documents/01_Collection/04_Codes/codes_book/estatistica_multivariada/rte_cereal.csv", header=TRUE)
+data = data.frame(data)
+
+
 # view data
 head(data)
 

@@ -13,6 +13,7 @@ summary(mtcars)
 
 mtcars$cyl = factor(mtcars$cyl)
 Y = as.matrix(mtcars[,c("mpg","disp","hp","wt")])
+#lm(Y1 + Y2 + Y3 + Y4 ~ X1 + X2 + X3) #reg multivariada
 
 model_mult = lm(Y ~ cyl + am + carb, data=mtcars)
 summary(model_mult)
@@ -20,6 +21,13 @@ summary(model_mult)
 
 
 
+
+lm(Y ~ X) # reg simples
+lm(Y ~ X1 + X2) #reg múltipla
+lm(Y ~ X1 + X2 + X3 + X4) #reg múltipla
+lm(Y1 + Y2 ~ X1 + X2 + X3 + X4) #reg multivariada
+lm(Y1 + Y2 + Y3 ~ X1 + X2 + X3 + X4) #reg multivariada
+lm(Y1 + Y2 + Y3 ~ X) #reg multivariada
 
 
 

@@ -1,0 +1,63 @@
+# Importando as bibliotecas necessárias
+import pandas as pd
+import numpy as np
+from sklearn.datasets import load_iris
+from sklearn.ensemble import AdaBoostClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import confusion_matrix, accuracy_score, classification_report
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Carregando o conjunto de dados Iris
+iris = load_iris()
+X = iris.data  # Atributos (features)
+y = iris.target  # Rótulos (target)
+
+# Dividindo os dados em conjunto de treino e teste
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+
+# Criando o classificador AdaBoost com uma árvore de decisão raso (stump) como base
+base_classifier = DecisionTreeClassifier(max_depth=1, random_state=42)  # Árvore rasa
+ada_boost_clf = AdaBoostClassifier(base_estimator=base_classifier, n_estimators=50, random_state=42)
+
+# Treinando o modelo com os dados de treino
+ada_boost_clf.fit(X_train, y_train)
+
+# Fazendo previsões com o conjunto de teste
+y_pred = ada_boost_clf.predict(X_test)
+
+# Avaliando a acurácia do modelo
+accuracy = accuracy_score(y_test, y_pred)
+print(f'Acurácia do modelo: {accuracy:.4f}')
+
+# Exibindo a matriz de confusão
+cm = confusion_matrix(y_test, y_pred)
+print('\nMatriz de Confusão:')
+print(cm)
+
+# Visualizando a matriz de confusão com o seaborn
+plt.figure(figsize=(6,6))
+sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', xticklabels=iris.target_names, yticklabels=iris.target_names)
+plt.title('Matriz de Confusão')
+plt.xlabel('Previsões')
+plt.ylabel('Valores Reais')
+plt.show()
+
+# Exibindo o relatório de classificação (precision, recall, f1-score)
+print('\nRelatório de Classificação:')
+print(classification_report(y_test, y_pred, target_names=iris.target_names))
+
+# Visualizando a importância das features
+feature_importances = ada_boost_clf.feature_importances_
+print('\nImportância das Features:')
+for feature, importance in zip(iris.feature_names, feature_importances):
+    print(f'{feature}: {importance:.4f}')
+
+# Visualizando a importância das features com gráfico
+plt.figure(figsize=(8,6))
+sns.barplot(x=iris.feature_names, y=feature_importances, palette="viridis")
+plt.title('Importância das Features no AdaBoost')
+plt.xlabel('Features')
+plt.ylabel('Importância')
+plt.show()

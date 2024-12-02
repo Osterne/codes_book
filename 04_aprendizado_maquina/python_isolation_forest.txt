@@ -1,0 +1,54 @@
+# Importando as bibliotecas necessárias
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.datasets import load_iris
+from sklearn.ensemble import IsolationForest
+from sklearn.preprocessing import StandardScaler
+
+# Carregando o conjunto de dados Iris
+iris = load_iris()
+X = iris.data  # Atributos (features)
+y = iris.target  # Rótulos reais das flores (não utilizado aqui, pois estamos fazendo detecção de anomalias)
+
+# Adicionando algumas anomalias artificiais (outliers) ao conjunto de dados
+np.random.seed(42)
+outliers = np.random.uniform(low=5, high=7, size=(10, 4))  # Gerando 10 pontos fora do padrão do Iris
+X_with_outliers = np.vstack([X, outliers])  # Adicionando os outliers ao conjunto de dados Iris
+
+# Normalizando os dados
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X_with_outliers)
+
+# Aplicando o modelo Isolation Forest para detectar anomalias
+model = IsolationForest(contamination=0.1, random_state=42)  # 'contamination' define a fração de anomalias
+model.fit(X_scaled)
+
+# Prevendo anomalias (-1 para anomalia, 1 para ponto normal)
+y_pred = model.predict(X_scaled)
+
+# Visualizando os resultados
+plt.figure(figsize=(10, 6))
+
+# Plotando os pontos normais
+plt.scatter(X_scaled[y_pred == 1, 0], X_scaled[y_pred == 1, 1], color='blue', label='Normal', alpha=0.6)
+
+# Plotando os outliers detectados
+plt.scatter(X_scaled[y_pred == -1, 0], X_scaled[y_pred == -1, 1], color='red', label='Anomalia', alpha=0.6)
+
+plt.title('Detecção de Anomalias com Isolation Forest')
+plt.xlabel('Feature 1 (Escalonada)')
+plt.ylabel('Feature 2 (Escalonada)')
+plt.legend()
+plt.show()
+
+# Avaliando o desempenho com base nos rótulos reais (se tivermos rótulos para as anomalias)
+# Como não temos rótulos reais de anomalias no Iris, não podemos calcular métricas de precisão. 
+# Contudo, se tivermos uma base de dados com anomalias reais, poderíamos usar métricas como F1-score.
+
+# Exibindo a quantidade de anomalias detectadas
+print(f'Número de anomalias detectadas: {np.sum(y_pred == -1)}')
+
+# Exibindo os índices dos outliers detectados
+outliers_detectados = np.where(y_pred == -1)[0]
+print(f'Índices dos outliers detectados: {outliers_detectados}')

@@ -70,8 +70,7 @@ chart.Correlation(decathlon2.active[, 1:6], histogram=TRUE, pch=19)
 # Principal Component Analysis
 res.pca <- prcomp(decathlon2.active, scale = TRUE)
 res.pca
-#names(res.pca)
-
+names(res.pca)
 
 #Variances of the principal components
 fviz_screeplot(res.pca, ncp=10)
@@ -83,6 +82,11 @@ fviz_screeplot(res.pca, ncp=10)
 
 # circular plot
 fviz_pca_var(res.pca)
+
+
+
+# Criar exemplo com multiplocaçao dos valores!!!!!!!!!!!!!!!!
+
 
 # circular plot (change color)
 fviz_pca_var(res.pca, col.var="steelblue")+

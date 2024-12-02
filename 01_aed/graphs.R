@@ -4,6 +4,59 @@
 
 
 
+# all color in R
+# https://r-charts.com/colors/
+
+
+# boxplot
+ozone <- airquality$Ozone
+temp <- airquality$Temp
+
+
+boxplot(Temp~Month,
+        data=airquality,
+        main="",
+        xlab="Mês",
+        ylab="Temperatura (em Fahrenheit)",
+        col="gray",
+        border="black"
+)
+
+
+# gráfico de barras
+data(mtcars)
+attach(mtcars)
+table_aux = table(cyl)
+table_aux
+barplot(table_aux, 
+        xlab = "Categoria", ylab = "Frequência absoluta", 
+        col = c("grey", "grey", "grey"))
+
+
+
+# gráfico de pizza
+data(mtcars)
+attach(mtcars)
+table_aux = table(cyl)
+table_aux
+pie(table_aux,
+    col = c("snow2", "snow3", "snow4"))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #https://rpubs.com/EstatBasica/Cap12
 
 x<-seq(125,167,0.1)  # eixo X do gráfico
