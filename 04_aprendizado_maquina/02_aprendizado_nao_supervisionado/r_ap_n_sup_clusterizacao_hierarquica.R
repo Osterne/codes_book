@@ -60,7 +60,6 @@ if (requireNamespace("scatterplot3d", quietly = TRUE)) {
                 main = "Visualização 3D dos Clusters")
 }
 
-# 11. Fim do script
 
 
 

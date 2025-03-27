@@ -48,7 +48,6 @@ ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width, color = factor(kmeans_model$
 # Esse valor pode ser usado para avaliar a qualidade do agrupamento
 print(paste("Total Within-Cluster Sum of Squares: ", kmeans_model$tot.withinss))
 
-# 8. Fim do script
 
 
 
